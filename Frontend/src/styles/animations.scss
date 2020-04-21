@@ -1,0 +1,174 @@
+@import "./vars";
+
+$dur: 300ms;
+$curve: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+.transition-group {
+  position: absolute;
+  width: 100%;
+  max-height: 100vh;
+  padding-top: 2rem;
+  overflow-y: auto;
+}
+
+.pages {
+  background-color: $bg;
+  min-height: 100%;
+
+  &-left {
+    &-enter {
+      animation: enter-left $dur $curve;
+    }
+
+    &-leave {
+      animation: leave-left $dur $curve;
+    }
+  }
+
+  &-right {
+    &-enter {
+      animation: enter-right $dur $curve;
+    }
+
+    &-leave {
+      animation: leave-right $dur $curve;
+    }
+  }
+
+  &-top {
+    &-enter {
+      animation: enter-top $dur $curve;
+    }
+
+    &-leave {
+      animation: leave-top $dur $curve;
+    }
+  }
+
+  &-bottom {
+    &-enter {
+      animation: enter-bottom $dur $curve;
+    }
+
+    &-leave {
+      animation: leave-bottom $dur $curve;
+    }
+  }
+
+  &-same-forward {
+    &-enter {
+      animation: zoom1 $dur/2 $curve forwards;
+    }
+
+    &-leave {
+      animation: zoom2 $dur/2 $curve forwards;
+      overflow-y: hidden !important;
+    }
+  }
+
+  &-same-backward {
+    &-enter {
+      animation: zoom2 $dur/2 $curve reverse forwards;
+    }
+
+    &-leave {
+      animation: zoom1 $dur/2 $curve reverse forwards;
+      overflow-y: hidden !important;
+      z-index: 2;
+    }
+  }
+}
+
+@keyframes enter-left {
+  from {
+    transform: translateX(-100vw);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes leave-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(100vw);
+  }
+}
+
+@keyframes enter-right {
+  from {
+    transform: translateX(100vw);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes leave-right {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100vw);
+  }
+}
+
+@keyframes enter-top {
+  from {
+    transform: translateY(-100vh);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes leave-top {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(100vh);
+  }
+}
+@keyframes enter-bottom {
+  from {
+    transform: translateY(100vh);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes leave-bottom {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-100vh);
+  }
+}
+
+@keyframes zoom1 {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes zoom2 {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}

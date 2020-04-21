@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap");
+@import "./vars";
+@import "./page";
+@import "./animations";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: white;
+  font-family: "Roboto";
+
+  &:focus {
+    outline: none;
+  }
+}
+
+html,
+body,
+#root {
+  height: 100vh;
+  width: 100vw;
+  background-color: $bg;
+}
+
+h1 {
+  font-size: 7vh;
+}
+
+img {
+  max-height: 90%;
+  max-width: 90%;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+  border: none;
+}
+
+p {
+  text-decoration: none;
+  outline: none;
+  border: none;
+}
+
+hr {
+  height: 2px;
+  width: 80%;
+  background-color: #dfdfdf69;
+  border: none;
+  margin: 3rem auto 4rem auto;
+}
+
+button {
+  background: none;
+  border: none;
+  width: auto;
+  overflow: visible;
+
+  color: inherit;
+  font: inherit;
+
+  line-height: normal;
+
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+
+  -webkit-appearance: none;
+
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+input {
+  border: none;
+  background: none;
+}
+
+li {
+  list-style: none;
+}

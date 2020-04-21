@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "outDir": "./build",
+    "removeComments": true,
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "jsx": "react",
+    "target": "es6",
+    "esModuleInterop": true,
+    "resolveJsonModule": false,
+    "importHelpers": true,
+    "strict": true,
+    "paths": {
+      "~*": ["./src/*", "./app/src/*"]
+    }
+  },
+  "include": ["./src/**/*.ts", "global.d.ts"],
+  "exclude": ["./node_modules", "./Frontend/node_modules", "./build", "./static"]
+}
