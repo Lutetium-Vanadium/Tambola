@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import store from "#root/store";
 import { useHistory } from "react-router-dom";
+
+import store from "#root/store";
 import useQuery from "#helpers/useQuery";
 
 function Home() {
@@ -40,7 +41,7 @@ function Home() {
         <p>Room Id</p>
         <input value={id} onChange={changeId} placeholder="Room ID" />
         {errored && "Invalid Id"}
-        <button onClick={joinGame}>Join</button>
+        <button onClick={joinGame}>Join/Create</button>
       </div>
     </div>
   );

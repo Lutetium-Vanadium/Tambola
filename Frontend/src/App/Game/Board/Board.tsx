@@ -1,18 +1,16 @@
-import React, { useState } from "react";
-import { RouteComponentProps } from "react-router";
+import React, { useState, useEffect } from "react";
+
 import generateTicket from "#root/generateTicket";
 
 const ticket = generateTicket();
 
 const BOX_WIDTH = 0.11 * window.innerWidth;
 
-interface BoardProps extends RouteComponentProps<{ id: string }> {}
+interface BoardProps {
+  id: string;
+}
 
-function Board({
-  match: {
-    params: { id },
-  },
-}: BoardProps) {
+function Board({ id }: BoardProps) {
   const [board, setBoard] = useState(ticket);
 
   const toggleCancel = (x: number, y: number) => {

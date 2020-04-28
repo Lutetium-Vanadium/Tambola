@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "watch": "parcel ./src/index.html",
-    "build": "parcel build ./src/index.html"
+    "build": "parcel build --out-dir=../static ./src/index.html"
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.3",
@@ -13,7 +13,8 @@
     "react": "^16.0.0",
     "react-dom": "^16.12.0",
     "react-page-animation": "^1.0.1",
-    "react-router-dom": "^5.1.2"
+    "react-router-dom": "^5.1.2",
+    "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.3",
@@ -23,6 +24,7 @@
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "@types/react-router-dom": "^5.1.4",
+    "@types/socket.io-client": "^1.4.32",
     "parcel-bundler": "^1.12.4",
     "sass": "^1.24.5",
     "typescript": "^3.7.5"

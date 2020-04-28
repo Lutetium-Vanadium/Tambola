@@ -4,3 +4,9 @@ type BoardNumber = {
   y: number;
   value: number;
 };
+
+type RoomDetails = {
+  isAdmin: boolean;
+  started: boolean;
+  connected: string[];
+};

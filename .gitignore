@@ -1,3 +1,7 @@
+build/
+static/
+
+
 # Logs
 logs
 *.log
