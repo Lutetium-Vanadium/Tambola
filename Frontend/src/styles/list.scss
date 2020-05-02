@@ -1,0 +1,53 @@
+.list {
+  width: 100%;
+
+  $svg-flex-size: 2;
+
+  .person {
+    height: 3.4rem;
+    width: 100%;
+    background-color: #b41e1e;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+
+    .translate-wrapper {
+      @include flex-box;
+
+      height: 100%;
+      width: 100%;
+      background-color: $bg;
+      transition: 0.3s;
+      z-index: 5;
+      position: relative;
+
+      svg {
+        height: 1.75rem;
+        flex: $svg-flex-size;
+      }
+
+      .name {
+        flex: 10 - $svg-flex-size;
+      }
+    }
+
+    .left,
+    .right {
+      position: absolute;
+      color: white;
+      top: 1.2rem;
+      cursor: pointer;
+    }
+
+    .left {
+      left: 1rem;
+      z-index: 1;
+    }
+
+    .right {
+      right: 1rem;
+      z-index: 1;
+    }
+  }
+  padding-bottom: 3.7rem;
+}

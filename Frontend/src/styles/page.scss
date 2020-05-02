@@ -1,11 +1,60 @@
 @import "./vars";
 
 .page {
-  @include flex-box($justify: space-evenly, $direction: column);
+  @include flex-box($justify: flex-start, $direction: column);
 
   background-color: $bg;
   height: 100vh;
   width: 100vw;
+
+  h2 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.7rem;
+    font-weight: 400;
+    font-size: 1.7rem;
+  }
+
+  .sub-heading {
+    width: 100%;
+    padding: 0 2rem;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .nav {
+    @include flex-box($justify: flex-start);
+
+    width: 100%;
+    height: 4rem;
+    min-height: 4rem;
+    padding: 0 1rem;
+
+    .people-icon {
+      background-color: darken($color: $bg, $amount: 10%);
+      border-radius: 50%;
+    }
+
+    svg {
+      cursor: pointer;
+      height: 2.6rem;
+    }
+  }
+
+  .or {
+    @include flex-box;
+    span {
+      flex: 1;
+      height: 1px;
+      background-color: #b6b6b6;
+    }
+    p {
+      padding: 0 0.5rem;
+      color: #b6b6b6;
+    }
+    width: 100%;
+    margin: 1rem 0;
+  }
 
   input {
     height: 5vh;
@@ -38,6 +87,14 @@
   }
 
   $box-width: 11vw;
+  .tickets {
+    @include flex-box($direction: column);
+
+    height: 100%;
+    width: 100%;
+    padding: 4.5rem 0s;
+  }
+
   .ticket {
     position: relative;
     height: $box-width * 3;
@@ -95,11 +152,20 @@
     }
   }
 
-  .share {
+  .btns {
+    @include flex-box($justify: space-evenly);
+
     position: fixed;
+    z-index: 1000;
     bottom: 1rem;
-    background-color: $highlightvd;
-    padding: 0.5rem 1rem;
-    border-radius: 0.4rem;
+    width: 100%;
+
+    * {
+      padding: 0.5rem 1rem;
+      background-color: $highlightvd;
+      border-radius: 0.4rem;
+      width: 32vw;
+      text-align: center;
+    }
   }
 }

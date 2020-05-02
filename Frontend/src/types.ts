@@ -10,3 +10,8 @@ type RoomDetails = {
   started: boolean;
   connected: string[];
 };
+
+type Person = {
+  name: string;
+  id: string;
+};

@@ -12,7 +12,9 @@ class Room {
   }
 
   get connected() {
-    return Array.from(this.sockets.keys(), (id) => this.sockets.get(id)?.name);
+    return Array.from(this.sockets.keys(), (id) => {
+      name: this.sockets.get(id)?.name, id;
+    });
   }
 
   constructor(public id: string) {}

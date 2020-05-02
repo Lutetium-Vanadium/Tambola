@@ -12,7 +12,8 @@
       "~*": ["./src/*"],
       "#root/*": ["./src/*"],
       "#styles/*": ["./src/styles"],
-      "#helpers/*": ["./src/helpers/*"]
+      "#helpers/*": ["./src/helpers/*"],
+      "#shared/*": ["./src/shared/*"]
     }
   },
   "include": ["./**/*.ts", "./**/*.tsx", "global.d.ts", "./declarations.d.ts"],

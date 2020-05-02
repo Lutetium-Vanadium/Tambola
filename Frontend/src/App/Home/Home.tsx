@@ -4,6 +4,8 @@ import { useHistory } from "react-router-dom";
 import store from "#root/store";
 import useQuery from "#helpers/useQuery";
 
+import { v4 as uuid } from "uuid";
+
 function Home() {
   const params = useQuery();
 
@@ -32,8 +34,12 @@ function Home() {
     history.push(id);
   };
 
+  const createGame = () => {
+    history.push(uuid());
+  };
+
   return (
-    <div className="page">
+    <div className="page" style={{ justifyContent: "space-evenly" }}>
       <h1>Tambola</h1>
       <div className="join">
         <p>Your Name</p>
@@ -41,7 +47,13 @@ function Home() {
         <p>Room Id</p>
         <input value={id} onChange={changeId} placeholder="Room ID" />
         {errored && "Invalid Id"}
-        <button onClick={joinGame}>Join/Create</button>
+        <button onClick={joinGame}>Join</button>
+        <div className="or">
+          <span />
+          <p>or</p>
+          <span />
+        </div>
+        <button onClick={createGame}>Create</button>
       </div>
     </div>
   );

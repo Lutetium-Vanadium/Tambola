@@ -1,7 +1,7 @@
 import io from "socket.io-client";
 
-const socket = io();
+// const socket = io();
 
-socket.on("hello", console.log);
+// socket.on("hello", console.log);
 
-export default socket;
+// export default socket;
