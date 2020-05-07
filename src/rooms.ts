@@ -26,8 +26,7 @@ class Rooms {
       this._rooms[roomID] = room;
       return true;
     }
-    this._rooms[roomID].join(personID, name);
-    return false;
+    return this._rooms[roomID].join(personID, name);
   }
 
   leave(roomId: string, id: string) {
@@ -44,6 +43,10 @@ class Rooms {
 
   connected(id: string) {
     return this._rooms[id]?.connected;
+  }
+
+  randomNum(id: string) {
+    return this._rooms[id]?.randomNum();
   }
 }
 

@@ -8,7 +8,7 @@ type BoardNumber = {
 type RoomDetails = {
   isAdmin: boolean;
   started: boolean;
-  connected: string[];
+  connected: Person[];
 };
 
 type Person = {

@@ -10,6 +10,7 @@ const BOX_WIDTH = 0.11 * window.innerWidth;
 interface BoardProps {
   isAdmin: boolean;
   people: Person[];
+  roomId: string;
 }
 
 function Board(props: BoardProps) {

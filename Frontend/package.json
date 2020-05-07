@@ -5,14 +5,15 @@
   "license": "MIT",
   "scripts": {
     "watch": "parcel ./src/index.html",
+    "prebuild": "rm -rf ../static",
     "build": "parcel build --out-dir=../static ./src/index.html"
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.3",
     "axios": "^0.19.1",
-    "react": "^16.0.0",
+    "react": ">=15",
     "react-dom": "^16.12.0",
-    "react-page-animation": "^1.0.1",
+    "react-page-animation": "git://github.com/lutetium-vanadium/react-page-animation.git",
     "react-router-dom": "^5.1.2",
     "socket.io-client": "^2.3.0",
     "uuid": "^8.0.0"

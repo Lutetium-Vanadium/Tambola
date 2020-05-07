@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react";
 
-// import socket from "#root/socketio";
+import socket from "#root/socketio";
 
 interface PeopleProps {
   people: Person[];
   isAdmin: boolean;
+  roomId: string;
 }
 
 type TouchDetails = {
@@ -15,7 +16,7 @@ type TouchDetails = {
 const THRESHOLD = window.innerWidth / 3;
 const SCALE = 2;
 
-function People({ people, isAdmin }: PeopleProps) {
+function People({ people, isAdmin, roomId }: PeopleProps) {
   const [touchStart, setTouchStart] = useState<TouchDetails>({
     x: 0,
     index: 0,
@@ -42,7 +43,8 @@ function People({ people, isAdmin }: PeopleProps) {
   };
 
   const remove = (index: number) => {
-    // socket.emit("remove-player", people[index].id);
+    console.log("REMOVING", people[index].id);
+    socket.emit("remove-player", roomId, people[index].id);
   };
 
   const handleTouchEnd = () => {

@@ -5,6 +5,7 @@ import People from "#shared/People";
 interface WaitingRoomProps {
   people: Person[];
   isAdmin: boolean;
+  roomId: string;
 }
 
 function WaitingRoom(props: WaitingRoomProps) {
