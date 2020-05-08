@@ -15,7 +15,7 @@ function App() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    history.push("/random-hack");
+    history.push("/random-hack-url");
     history.goBack();
     setMounted(true);
   }, []);
@@ -24,7 +24,7 @@ function App() {
     <div>
       <PageAnimation classExtension="pages" grid={[[/\/$/, /^\/[a-z0-9]+/i]]} timeout={300} animate={mounted}>
         <Switch>
-          <Route path="/random-hack" component={Null} />
+          <Route path="/random-hack-url" component={Null} /> {/* To stop the animation from extra mount */}
           <Route path="/:id" component={Game} />
           <Route path="/" component={Home} />
         </Switch>
@@ -34,3 +34,5 @@ function App() {
 }
 
 export default App;
+
+enum A {}

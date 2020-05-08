@@ -50,4 +50,28 @@
     }
   }
   padding-bottom: 3.7rem;
+
+  .prizes {
+    @include flex-box;
+
+    background-color: $bg;
+    transition: 0.3s;
+    z-index: 5;
+    height: 3.4rem;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+
+    img {
+      height: 1.75rem;
+      flex: $svg-flex-size;
+    }
+    .name {
+      flex: 10 - (2 * $svg-flex-size);
+    }
+    .worth {
+      flex: $svg-flex-size;
+    }
+  }
 }

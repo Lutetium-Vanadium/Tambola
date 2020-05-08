@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-import generateTicket from "#root/generateTicket";
+import generateTicket from "#helpers/generateTicket";
 import People from "#shared/People";
+import Prizes from "#shared/Prizes";
+
+import prizesSvg from "../prizes.svg";
 
 const ticket = generateTicket();
 
@@ -11,11 +14,13 @@ interface BoardProps {
   isAdmin: boolean;
   people: Person[];
   roomId: string;
+  prizes: Prize[];
 }
 
-function Board(props: BoardProps) {
+function Board({ prizes, ...props }: BoardProps) {
   const [board, setBoard] = useState(ticket);
   const [showPeople, setShowPeople] = useState(false);
+  const [showPrizes, setShowPrizes] = useState(false);
 
   const toggleCancel = (x: number, y: number) => {
     const newBoard = deepCopy(board);
@@ -28,9 +33,16 @@ function Board(props: BoardProps) {
     <>
       <div className="nav">
         {showPeople ? <CloseX onClick={() => setShowPeople(false)} /> : <PeopleIcon onClick={() => setShowPeople(true)} />}
+        {showPrizes ? (
+          <CloseX onClick={() => setShowPrizes(false)} />
+        ) : (
+          <img src={prizesSvg} alt="prizes" className="icon" onClick={() => setShowPrizes(!showPrizes)} />
+        )}
       </div>
       {showPeople ? (
         <People {...props} />
+      ) : showPrizes ? (
+        <Prizes prizes={prizes} />
       ) : (
         <div className="tickets">
           <div className="ticket">
@@ -92,7 +104,7 @@ function CloseX({ onClick }: SVGHeaderProps) {
 
 function PeopleIcon({ onClick }: SVGHeaderProps) {
   return (
-    <svg viewBox="0 0 82.992828 83.055969" className="people-icon" onClick={onClick}>
+    <svg viewBox="0 0 82.992828 83.055969" className="icon" onClick={onClick}>
       <path
         d="M 29.926318000000002, 26.913342
            a 11.638951,11.638951 0 1,0 23.277902,0

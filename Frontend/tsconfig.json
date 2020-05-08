@@ -9,7 +9,7 @@
     "rootDir": "./src",
     "target": "ES5",
     "paths": {
-      "~*": ["./src/*"],
+      "#*": ["./src/*"],
       "#root/*": ["./src/*"],
       "#styles/*": ["./src/styles"],
       "#helpers/*": ["./src/helpers/*"],

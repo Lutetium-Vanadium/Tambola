@@ -8,8 +8,10 @@ declare module "*.png" {
 }
 
 declare module "*.svg" {
-  const value: any;
-  export = value;
+  import React = require("react");
+  export const ReactComponent: React.SFC<React.SVGProps<SVGSVGElement>>;
+  const src: string;
+  export default src;
 }
 
 declare type obj = {

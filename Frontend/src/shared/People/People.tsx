@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-import socket from "#root/socketio";
+// import socket from "#root/socketio";
 
 interface PeopleProps {
   people: Person[];
@@ -44,7 +44,7 @@ function People({ people, isAdmin, roomId }: PeopleProps) {
 
   const remove = (index: number) => {
     console.log("REMOVING", people[index].id);
-    socket.emit("remove-player", roomId, people[index].id);
+    // socket.emit("remove-player", roomId, people[index].id);
   };
 
   const handleTouchEnd = () => {

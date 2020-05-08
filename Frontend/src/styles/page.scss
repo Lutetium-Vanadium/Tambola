@@ -23,19 +23,20 @@
   }
 
   .nav {
-    @include flex-box($justify: flex-start);
+    @include flex-box($justify: space-between);
 
     width: 100%;
     height: 4rem;
     min-height: 4rem;
     padding: 0 1rem;
 
-    .people-icon {
+    .icon {
       background-color: darken($color: $bg, $amount: 10%);
       border-radius: 50%;
     }
 
-    svg {
+    svg,
+    img {
       cursor: pointer;
       height: 2.6rem;
     }
@@ -149,6 +150,7 @@
 
     strong {
       width: 2ch;
+      min-width: 2ch;
       text-align: center;
     }
   }
