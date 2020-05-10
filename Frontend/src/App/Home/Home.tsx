@@ -35,7 +35,9 @@ function Home() {
   };
 
   const createGame = () => {
-    history.push(uuid());
+    const id = uuid();
+
+    history.push(id.split("-").join(""));
   };
 
   return (

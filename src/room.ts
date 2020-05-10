@@ -1,5 +1,3 @@
-import { Person } from "./types";
-
 type PersonDetails = {
   admin: boolean;
   name: string;
@@ -9,6 +7,7 @@ class Room {
   sockets = new Map<string, PersonDetails>();
   started = false;
   numbers = new Set<number>();
+  prizes: Prize[] = [];
 
   constructor(public id: string) {}
 
@@ -30,7 +29,16 @@ class Room {
   }
 
   leave(id: string) {
+    const person = this.sockets.get(id);
     this.sockets.delete(id);
+    if (person?.admin && this.length > 0) {
+      const { id } = this.connected[Math.floor(Math.random() * this.length)];
+
+      const { name } = this.sockets.get(id) ?? { name: "" };
+
+      this.sockets.set(id, { name, admin: true });
+      return id;
+    }
   }
 
   isConnected(id: string) {
@@ -51,6 +59,10 @@ class Room {
     this.numbers.add(num);
 
     return num;
+  }
+
+  updatePrize(prizes: Prize[]) {
+    this.prizes = prizes;
   }
 }
 

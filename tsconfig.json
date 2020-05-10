@@ -17,6 +17,6 @@
       "~*": ["./src/*", "./app/src/*"]
     }
   },
-  "include": ["./src/**/*.ts", "global.d.ts", "./declarations.d.ts"],
+  "include": ["./src/**/*.ts", "global.d.ts", "./src/types.ts"],
   "exclude": ["./node_modules", "./Frontend/node_modules", "./build", "./static"]
 }

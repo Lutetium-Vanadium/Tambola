@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
 
-// import socket from "#root/socketio";
+import socket from "#root/socketio";
 import { Screens } from "#root/enums";
 import { PLAYING_ROOM_SCREENS, WAITING_ROOM_SCREENS } from "#root/constants";
 import store from "#root/store";
@@ -28,17 +28,16 @@ function Game({
   const [isAdmin, setIsAdmin] = useState(true);
   const [connectedPeople, setConnectedPeople] = useState<Person[]>(tempPeople);
   const [prizes, setPrizes] = useState<Prize[]>([]);
-  const [currentScreenIndex, setCurrentScreenIndex] = useState(1);
+  const [currentScreenIndex, setCurrentScreenIndex] = useState(0);
 
   const history = useHistory();
 
   const startGame = () => {
-    setStarted(true);
-    // socket.emit("start-game", roomId);
+    socket.emit("start-game", roomId);
   };
 
   const generateNumber = () => {
-    // socket.emit("generate-number", roomId);
+    socket.emit("generate-number", roomId);
   };
 
   const addPrize = (prize: Prize, num: number) => {
@@ -54,63 +53,73 @@ function Game({
           c++;
         }
       }
+      socket.emit("update-prize", roomId, [...prizes, prize]);
       return [...prizes, prize];
     });
   };
 
   useEffect(() => {
-    // socket.emit("join-game", roomId, store.get("name"));
-    // const roomDetails = (details: RoomDetails) => {
-    //   setIsAdmin(details.isAdmin);
-    //   setConnectedPeople(details.connected);
-    //   setStarted(details.started);
-    //   setPrizes(details.prizes)
-    //   console.log(details);
-    // };
-    // const newPlayer = (person: Person) => {
-    //   if (person.id === socket.id) return;
-    //   console.log({ person });
-    //   setConnectedPeople((connectedPeople) => [...connectedPeople, person]);
-    // };
-    // const changePrizes = (prizes: Prize[]) => {
-    //   setPrizes(prizes);
-    // }
-    // const forceLeave = (playerId: string) => {
-    //   if (playerId === socket.id) {
-    //     socket.emit("leave-game", roomId);
-    //     notification("You were kicked out of the room by the owner");
-    //     history.push("/");
-    //   }
-    // };
-    // const playerLeft = (playerId: string) => {
-    //   setConnectedPeople((connectedPeople) => connectedPeople.filter((person) => person.id !== playerId));
-    // };
-    // const startGame = () => {
-    //   setStarted(true);
-    // };
-    // const newNumber = (num: number) => {
-    //   showNumber(num);
-    // };
-    // socket
-    //   .on("room-details", roomDetails)
-    //   .on("new-player", newPlayer)
-    //   .on("change-prizes", changePrizes)
-    //   .on("force-leave", forceLeave)
-    //   .on("player-left", playerLeft)
-    //   .on("start-game", startGame)
-    //   .on("new-number", newNumber);
-    // return () => {
-    //   console.log("UNMOUNTING GAME: LEAVING", roomId);
-    //   socket.emit("leave-game", roomId);
-    //   socket
-    //     .off("room-details", roomDetails)
-    //     .off("new-player", newPlayer)
-    //     .off("change-prizes", changePrizes)
-    //     .off("force-leave", forceLeave)
-    //     .off("player-left", playerLeft)
-    //     .off("start-game", startGame)
-    //     .off("new-number", newNumber);
-    // };
+    socket.emit("join-game", roomId, store.get("name"));
+    const roomDetails = (details: RoomDetails) => {
+      setIsAdmin(details.isAdmin);
+      setConnectedPeople(details.connected);
+      setStarted(details.started);
+      setPrizes(details.prizes);
+      console.log(details);
+    };
+    const newPlayer = (person: Person) => {
+      if (person.id === socket.id) return;
+      console.log({ person });
+      setConnectedPeople((connectedPeople) => [...connectedPeople, person]);
+    };
+    const changePrizes = (prizes: Prize[]) => {
+      setPrizes(prizes);
+    };
+    const forceLeave = (playerId: string) => {
+      if (playerId === socket.id) {
+        socket.emit("leave-game", roomId);
+        notification("You were kicked out of the room by the owner");
+        history.push("/");
+      }
+    };
+    const playerLeft = (playerId: string) => {
+      setConnectedPeople((connectedPeople) => connectedPeople.filter((person) => person.id !== playerId));
+    };
+    const startGame = () => {
+      setCurrentScreenIndex(1);
+      setStarted(true);
+    };
+    const newNumber = (num: number) => {
+      showNumber(num);
+    };
+    const becomeAdmin = () => {
+      setIsAdmin(true);
+      notification("You are now admin of the game.");
+    };
+
+    socket
+      .on("room-details", roomDetails)
+      .on("new-player", newPlayer)
+      .on("change-prizes", changePrizes)
+      .on("force-leave", forceLeave)
+      .on("player-left", playerLeft)
+      .on("start-game", startGame)
+      .on("new-number", newNumber)
+      .on("become-admin", becomeAdmin);
+
+    return () => {
+      console.log("UNMOUNTING GAME: LEAVING", roomId);
+      socket.emit("leave-game", roomId);
+      socket
+        .off("room-details", roomDetails)
+        .off("new-player", newPlayer)
+        .off("change-prizes", changePrizes)
+        .off("force-leave", forceLeave)
+        .off("player-left", playerLeft)
+        .off("start-game", startGame)
+        .off("new-number", newNumber)
+        .off("become-admin", becomeAdmin);
+    };
   }, [roomId]);
 
   const shareText = `Join my game of Tambola by clicking on the link below!%0a%0a ${encodeURIComponent(
@@ -129,7 +138,7 @@ function Game({
         ) : screens[currentScreenIndex] === Screens.People ? (
           <People people={connectedPeople} isAdmin={isAdmin} roomId={roomId} />
         ) : screens[currentScreenIndex] === Screens.Prizes ? (
-          <Prizes prizes={prizes} isAdmin={isAdmin} addPrize={addPrize} />
+          <Prizes prizes={prizes} isAdmin={isAdmin && !started} roomId={roomId} addPrize={addPrize} />
         ) : (
           `ERROR, Unknown Screen: ${screens[currentScreenIndex]}`
         )}

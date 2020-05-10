@@ -30,7 +30,12 @@ class Rooms {
   }
 
   leave(roomId: string, id: string) {
-    this._rooms[roomId]?.leave(id);
+    const adminId = this._rooms[roomId]?.leave(id);
+
+    if (this._rooms[roomId]?.length === 0) {
+      delete this._rooms[id];
+    }
+    return adminId;
   }
 
   start(id: string) {
@@ -47,6 +52,14 @@ class Rooms {
 
   randomNum(id: string) {
     return this._rooms[id]?.randomNum();
+  }
+
+  getPrizes(id: string) {
+    return this._rooms[id]?.prizes;
+  }
+
+  updatePrizes(id: string, prizes: Prize[]) {
+    this._rooms[id]?.updatePrize(prizes);
   }
 }
 

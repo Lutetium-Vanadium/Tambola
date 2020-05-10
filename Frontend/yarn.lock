@@ -4576,7 +4576,7 @@ react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
 
 "react-page-animation@git://github.com/lutetium-vanadium/react-page-animation.git":
   version "1.0.3"
-  resolved "git://github.com/lutetium-vanadium/react-page-animation.git#1ed52739a92c73eb46f9f58a1be8de513f47fc18"
+  resolved "git://github.com/lutetium-vanadium/react-page-animation.git#4ac85ac3ddb9831ebe938565eb1f978a927dc024"
   dependencies:
     "@types/react" "^16.9.25"
     "@types/react-dom" "^16.9.5"

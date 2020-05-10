@@ -1,6 +1,6 @@
 import React from "react";
 
-// import socket from "#root/socketio";
+import socket from "#root/socketio";
 import DeletableList from "#shared/DeletableList";
 
 interface PeopleProps {
@@ -11,8 +11,10 @@ interface PeopleProps {
 
 function People({ people, isAdmin, roomId }: PeopleProps) {
   const remove = (index: number) => {
-    console.log("REMOVING", people[index].id);
-    // socket.emit("remove-player", roomId, people[index].id);
+    if (confirm(`Are you sure you want to remove ${people[index].name}?`)) {
+      console.log("REMOVING", people[index].id);
+      socket.emit("remove-player", roomId, people[index].id);
+    }
   };
 
   return (

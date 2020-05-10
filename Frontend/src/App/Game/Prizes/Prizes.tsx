@@ -4,17 +4,19 @@ import Dropdown from "#shared/Dropdown";
 import DeletableList from "#shared/DeletableList";
 
 import { PrizeTypes } from "#root/enums";
+import socket from "#root/socketio";
 
 interface PrizesProps {
   prizes: Prize[];
   isAdmin: boolean;
+  roomId: string;
   addPrize: (prize: Prize, num: number) => void;
 }
 
 const POPUP_HEIGHT = window.innerHeight / 2;
 const PRIZES = Object.values<string>(PrizeTypes);
 
-function Prizes({ prizes, isAdmin, addPrize: _addPrize }: PrizesProps) {
+function Prizes({ prizes, isAdmin, roomId, addPrize: _addPrize }: PrizesProps) {
   const [height, setHeight] = useState(0);
   const [type, setType] = useState<PrizeTypes | null>(null);
   const [worth, setWorth] = useState(50);
@@ -78,7 +80,31 @@ function Prizes({ prizes, isAdmin, addPrize: _addPrize }: PrizesProps) {
     }
   };
 
-  const remove = (index: number) => {};
+  const remove = (index: number) => {
+    if (confirm(`Are you sure you want to remove ${prizes[index].name}?`)) {
+      const prize = prizes[index];
+      console.log("Removing", prize);
+      if (prize.name !== prize.type) {
+        const index = +prize.name[prize.name.length - 1];
+        let c = 1;
+        let newPrizes: Prize[] = [];
+        for (let i = 0; i < prizes.length; i++) {
+          if (i === index) continue;
+          newPrizes.push(prizes[i]);
+          if (prizes[i].type !== prize.type) continue;
+          newPrizes[i < index ? i : i - 1].name = `${prizes[i].type} ${c}`;
+          c++;
+        }
+        numberUsed.current.set(prize.type, c - 1);
+        console.log(newPrizes);
+        socket.emit("update-prize", roomId, newPrizes);
+      } else {
+        prizes.splice(index, 1);
+        console.log(prizes);
+        socket.emit("update-prize", roomId, prizes);
+      }
+    }
+  };
 
   return (
     <>

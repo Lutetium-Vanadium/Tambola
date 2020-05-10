@@ -3,6 +3,7 @@ import * as http from "http";
 import express from "express";
 import socketio from "socket.io";
 import Rooms from "./rooms";
+import "./types";
 
 const PORT = 3000;
 
@@ -31,7 +32,14 @@ io.on("connection", (sock) => {
     // rooms.prt();
     // console.log("\n");
 
-    sock.emit("room-details", { isAdmin, started: rooms.hasStarted(roomId), connected: rooms.connected(roomId) });
+    const details: RoomDetails = {
+      isAdmin,
+      started: rooms.hasStarted(roomId),
+      connected: rooms.connected(roomId),
+      prizes: rooms.getPrizes(roomId),
+    };
+
+    sock.emit("room-details", details);
     console.log({ [sock.id]: sock.rooms });
   });
 
@@ -42,7 +50,10 @@ io.on("connection", (sock) => {
   sock.on("leave-game", (roomId: string) => {
     console.log(sock.id, "LEAVES", roomId);
     sock.leave(roomId);
-    rooms.leave(roomId, sock.id);
+    const adminId = rooms.leave(roomId, sock.id);
+    if (adminId) {
+      io.to(adminId).emit("become-admin");
+    }
     io.to(roomId).emit("player-left", sock.id);
   });
 
@@ -54,6 +65,11 @@ io.on("connection", (sock) => {
   sock.on("generate-number", (roomId: string) => {
     const num = rooms.randomNum(roomId);
     io.to(roomId).emit("new-number", num);
+  });
+
+  sock.on("update-prize", (roomId: string, prizes: Prize[]) => {
+    rooms.updatePrizes(roomId, prizes);
+    io.to(roomId).emit("change-prizes", prizes);
   });
 });
 
