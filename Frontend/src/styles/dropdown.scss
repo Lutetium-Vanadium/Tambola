@@ -1,0 +1,102 @@
+.dropdown {
+  @include flex-box;
+
+  position: relative;
+  height: 2.6rem;
+  width: 70%;
+  margin: 1rem;
+  background-color: $bgm;
+  border-radius: 5px;
+  z-index: 9000;
+  border: 2px solid #00000000;
+  transition: border 0.3s linear;
+
+  .title {
+    cursor: pointer;
+
+    &.-placeholder {
+      color: #dfdfdf;
+    }
+  }
+
+  .options {
+    cursor: pointer;
+    position: absolute;
+    top: 2.6rem;
+    width: 100%;
+    background-color: darken($bgm, 3%);
+    transition: 0.3s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    overflow: hidden;
+    border-radius: 2px;
+    box-shadow: 5px 5px 5px #00000036, -5px 5px 5px #00000036;
+    z-index: 8000;
+
+    .option {
+      @include flex-box($justify: flex-start);
+      padding: 0.1rem 0.6rem;
+      height: 2rem;
+    }
+  }
+
+  &.-focus {
+    border: 2px solid $bgl;
+  }
+}
+
+input[type="range"] {
+  margin: 2vh 0;
+  width: 70%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: $bgm;
+  border-radius: 10px;
+  height: 1.5rem;
+  padding: 0;
+  overflow: hidden;
+
+  :focus {
+    outline: none;
+  }
+
+  &::-webkit-slider-thumb {
+    // appearance: none;
+    -webkit-appearance: none;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    background-color: $highlight;
+    border: 1px solid #bbbbbb;
+    content: "hello";
+    box-shadow: -70vw 0 0 calc(70vw - 0.75rem) $highlightvd;
+
+    &::before {
+      content: "before";
+      display: block;
+      background-color: $highlightvd;
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  &::-webkit-slider-runnable-track {
+    height: 1.5rem;
+    background-color: $bgm;
+  }
+
+  &::-moz-range-thumb {
+    border-radius: 50%;
+    background-color: $highlight;
+    content: "";
+    border: 1px solid #bbbbbb;
+    appearance: none;
+    width: calc(1.5rem - 2px);
+    height: calc(1.5rem - 2px);
+  }
+  &::-moz-range-progress {
+    height: 1.5rem;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: $highlightvd;
+    transition: 0.3s;
+  }
+}
