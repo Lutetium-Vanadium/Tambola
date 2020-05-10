@@ -1,4 +1,4 @@
-import { Prizes } from "#root/enums";
+import { PrizeTypes } from "#root/enums";
 
 type Number = {
   value: number; // actual number
@@ -13,12 +13,12 @@ const CORNERS = [
   [2, 4],
 ];
 
-const validateTicket = (_ticket: number[][], numbers: Set<number>, prize: Prizes): ValidationResponse => {
+const validateTicket = (_ticket: number[][], numbers: Set<number>, prize: PrizeTypes): ValidationResponse => {
   const ticket = process(_ticket, numbers);
   let message: string[] = [];
 
   switch (prize) {
-    case Prizes.FullHouse:
+    case PrizeTypes.FullHouse:
       for (const row of ticket) {
         for (const num of row) {
           if (!num.valid) {
@@ -27,40 +27,40 @@ const validateTicket = (_ticket: number[][], numbers: Set<number>, prize: Prizes
         }
       }
       break;
-    case Prizes.Ladoo:
+    case PrizeTypes.Ladoo:
       return {
         success: ticket[2][1].valid,
         message: `${ticket[2][1]} hasn't been ${ticket[2][1].reason}.`,
       };
-    case Prizes.Corner:
+    case PrizeTypes.Corner:
       for (const [i, j] of CORNERS) {
         if (!ticket[i][j].valid) {
           message.push(`${ticket[i][j].value} hasn't been ${ticket[i][j].reason}.`);
         }
       }
       break;
-    case Prizes.TopLine:
+    case PrizeTypes.TopLine:
       for (const num of ticket[0]) {
         if (!num.valid) {
           message.push(`${num.value} hasn't been ${num.reason}.`);
         }
       }
       break;
-    case Prizes.MiddleLine:
+    case PrizeTypes.MiddleLine:
       for (const num of ticket[1]) {
         if (!num.valid) {
           message.push(`${num.value} hasn't been ${num.reason}.`);
         }
       }
       break;
-    case Prizes.BottomLine:
+    case PrizeTypes.BottomLine:
       for (const num of ticket[2]) {
         if (!num.valid) {
           message.push(`${num.value} hasn't been ${num.reason}.`);
         }
       }
       break;
-    case Prizes.EarlyFive:
+    case PrizeTypes.EarlyFive:
       let count = 0;
       for (const row of ticket) {
         for (const num of row) {

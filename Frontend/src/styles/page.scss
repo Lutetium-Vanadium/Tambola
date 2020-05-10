@@ -8,10 +8,11 @@
   width: 100vw;
 
   h2 {
-    margin-top: 1.5rem;
-    margin-bottom: 1.7rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1.3rem;
     font-weight: 400;
     font-size: 1.7rem;
+    text-align: center;
   }
 
   .sub-heading {
@@ -23,23 +24,63 @@
   }
 
   .nav {
-    @include flex-box($justify: space-between);
+    @include flex-box($align: flex-start, $direction: column);
 
     width: 100%;
     height: 4rem;
     min-height: 4rem;
-    padding: 0 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: $bg;
+    z-index: 1000;
 
-    .icon {
-      background-color: darken($color: $bg, $amount: 10%);
-      border-radius: 50%;
+    .screens {
+      @include flex-box;
+      width: 100%;
+      flex: 1;
     }
 
-    svg,
-    img {
+    .item {
+      @include flex-box;
+
+      flex: 1;
+      height: 90%;
+      margin-top: 3px;
       cursor: pointer;
-      height: 2.6rem;
     }
+
+    .back {
+      padding-left: 0.8rem;
+      cursor: pointer;
+
+      img {
+        height: 1.7rem;
+      }
+    }
+    .icon {
+      height: 1.7rem;
+      margin-right: 0.3rem;
+    }
+
+    .name {
+      font-size: 1.2rem;
+    }
+
+    .location-bar {
+      display: inline-block;
+      height: 3px;
+      background-color: $highlightd;
+      transition: 0.4s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    }
+  }
+
+  .screen {
+    position: relative;
+    top: 4.6rem;
+    width: 100%;
+    min-height: calc(100 * var(--vh) - 8rem);
+    // height: calc(100 * var(--vh) -);
   }
 
   .or {
@@ -149,8 +190,8 @@
     }
 
     strong {
-      width: 2ch;
-      min-width: 2ch;
+      width: 1.9ch;
+      min-width: 1.9ch;
       text-align: center;
     }
   }

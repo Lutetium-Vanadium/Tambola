@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 82.992828 93.055969" version="1.1">
+  <path
+    d="M 29.926318000000002, 26.913342 a 11.638951,11.638951 0 1,0 23.277902,0 a 11.638951,11.638951 0 1,0 -23.277902,0"
+    style="fill: #e6e6e6; fillOpacity: 1; stroke: none; strokeWidth: 1.4575032; strokeMiterlimit: 4; strokeDasharray: none;"
+  />
+  <path
+    d="M 41.622633,43.898449 A 30.850482,30.850482 0 0 0 11.929274,66.498059 38.996415,39.027986 0 0 0 41.853102,80.556653 38.996415,39.027986 0 0 0 71.444898,66.921887 30.850482,30.850482 0 0 0 41.622633,43.898449 Z"
+    style="fill: #e6e6e6; fillOpacity: 1; stroke: none; strokeWidth: 1.4575032; strokeMiterlimit: 4; strokeDasharray: none;"
+  />
+</svg>

@@ -6,6 +6,8 @@ import App from "./App";
 
 import "./styles/main.scss";
 
+document.documentElement.style.setProperty("--vh", `${window.innerHeight / 100}px`);
+
 render(
   <BrowserRouter>
     <App />
