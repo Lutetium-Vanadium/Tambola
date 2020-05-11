@@ -6,17 +6,20 @@ import DeletableList from "#shared/DeletableList";
 import { PrizeTypes } from "#root/enums";
 import socket from "#root/socketio";
 
+import completedSvg from "./completed.svg";
+
 interface PrizesProps {
   prizes: Prize[];
-  isAdmin: boolean;
+  locked: boolean;
   roomId: string;
   addPrize: (prize: Prize, num: number) => void;
+  claimPrize: (index: number) => void;
 }
 
 const POPUP_HEIGHT = window.innerHeight / 2;
 const PRIZES = Object.values<string>(PrizeTypes);
 
-function Prizes({ prizes, isAdmin, roomId, addPrize: _addPrize }: PrizesProps) {
+function Prizes({ prizes, locked, roomId, addPrize: _addPrize, claimPrize }: PrizesProps) {
   const [height, setHeight] = useState(0);
   const [type, setType] = useState<PrizeTypes | null>(null);
   const [worth, setWorth] = useState(50);
@@ -119,11 +122,12 @@ function Prizes({ prizes, isAdmin, roomId, addPrize: _addPrize }: PrizesProps) {
       </p>
       <DeletableList
         list={prizes}
-        enable={isAdmin}
+        enable={locked}
         remove={remove}
         itemClassName="prizes"
+        onClick={(_, index) => claimPrize(index)}
         End={
-          isAdmin
+          locked
             ? () => (
                 <button className="add-prize" onClick={() => setHeight(POPUP_HEIGHT)}>
                   +
@@ -142,6 +146,7 @@ function Prizes({ prizes, isAdmin, roomId, addPrize: _addPrize }: PrizesProps) {
           </>
         )}
       </DeletableList>
+      {locked && (
         <div className="add-prize-overlay-wrapper" style={{ opacity: height / POPUP_HEIGHT, pointerEvents: height ? "auto" : "none" }}>
           <div style={{ height: window.innerHeight - height }} onClick={() => setHeight(0)}></div>
           <div className="add-prize-overlay" style={{ height }}>

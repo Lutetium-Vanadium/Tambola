@@ -15,11 +15,12 @@ interface DeletableListProps<T> {
   list: T[];
   children: (value: T, index: number) => any;
   remove: (index: number) => void;
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => void;
   Start?: () => JSX.Element;
   End?: () => JSX.Element;
 }
 
-function DeletableList<T>({ enable = true, className, itemClassName, list, children, remove, Start, End }: DeletableListProps<T>) {
+function DeletableList<T>({ enable = true, className, itemClassName, list, children, remove, onClick, Start, End }: DeletableListProps<T>) {
   const [touchStart, setTouchStart] = useState<TouchDetails>({
     x: 0,
     index: 0,
@@ -74,7 +75,11 @@ function DeletableList<T>({ enable = true, className, itemClassName, list, child
           <p className="right" onClick={() => remove(index)}>
             Remove
           </p>
-          <div className="translate-wrapper" style={touchStart.index === index ? { transform: `translateX(${transform / SCALE}px)` } : {}}>
+          <div
+            className="translate-wrapper"
+            style={touchStart.index === index ? { transform: `translateX(${transform / SCALE}px)` } : {}}
+            onClick={onClick ? (event) => onClick(event, index) : undefined}
+          >
             {children(value, index)}
           </div>
         </li>

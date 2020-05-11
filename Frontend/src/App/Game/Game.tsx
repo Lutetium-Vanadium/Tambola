@@ -30,6 +30,8 @@ function Game({
   const [prizes, setPrizes] = useState<Prize[]>([]);
   const [currentScreenIndex, setCurrentScreenIndex] = useState(0);
 
+  const [ticket, setTicket] = useState(null);
+
   const history = useHistory();
 
   const startGame = () => {
@@ -56,6 +58,10 @@ function Game({
       socket.emit("update-prize", roomId, [...prizes, prize]);
       return [...prizes, prize];
     });
+  };
+
+  const claimPrize = (index: number) => {
+    socket.emit("claim-prize", index, ticket);
   };
 
   useEffect(() => {
@@ -138,7 +144,7 @@ function Game({
         ) : screens[currentScreenIndex] === Screens.People ? (
           <People people={connectedPeople} isAdmin={isAdmin} roomId={roomId} />
         ) : screens[currentScreenIndex] === Screens.Prizes ? (
-          <Prizes prizes={prizes} isAdmin={isAdmin && !started} roomId={roomId} addPrize={addPrize} />
+          <Prizes prizes={prizes} locked={isAdmin && !started} roomId={roomId} addPrize={addPrize} claimPrize={claimPrize} />
         ) : (
           `ERROR, Unknown Screen: ${screens[currentScreenIndex]}`
         )}
