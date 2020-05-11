@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Switch, Route, useHistory } from "react-router-dom";
+import { Switch, Route, useHistory, Redirect } from "react-router-dom";
 import PageAnimation from "react-page-animation";
 
 import Home from "./Home";
@@ -16,7 +16,7 @@ function App() {
 
   useEffect(() => {
     history.push("/random-hack-url");
-    history.goBack();
+    // history.goBack();
     setMounted(true);
   }, []);
 
@@ -24,7 +24,7 @@ function App() {
     <div>
       <PageAnimation classExtension="pages" grid={[[/\/$/, /^\/[a-z0-9]+/i]]} timeout={300} animate={mounted}>
         <Switch>
-          <Route path="/random-hack-url" component={Null} /> {/* To stop the animation from extra mount */}
+          <Route path="/random-hack-url" component={() => <Redirect to="/" />} /> {/* To stop the animation from extra mount */}
           <Route path="/:id" component={Game} />
           <Route path="/" component={Home} />
         </Switch>

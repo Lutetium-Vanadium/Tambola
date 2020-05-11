@@ -84,8 +84,8 @@ function Prizes({ prizes, isAdmin, roomId, addPrize: _addPrize }: PrizesProps) {
     if (confirm(`Are you sure you want to remove ${prizes[index].name}?`)) {
       const prize = prizes[index];
       console.log("Removing", prize);
+      numberUsed.current.set(prize.type, (numberUsed.current.get(prize.type) ?? 1) - 1);
       if (prize.name !== prize.type) {
-        const index = +prize.name[prize.name.length - 1];
         let c = 1;
         let newPrizes: Prize[] = [];
         for (let i = 0; i < prizes.length; i++) {
@@ -95,7 +95,6 @@ function Prizes({ prizes, isAdmin, roomId, addPrize: _addPrize }: PrizesProps) {
           newPrizes[i < index ? i : i - 1].name = `${prizes[i].type} ${c}`;
           c++;
         }
-        numberUsed.current.set(prize.type, c - 1);
         console.log(newPrizes);
         socket.emit("update-prize", roomId, newPrizes);
       } else {
@@ -135,13 +134,14 @@ function Prizes({ prizes, isAdmin, roomId, addPrize: _addPrize }: PrizesProps) {
       >
         {({ name, completed, worth }) => (
           <>
-            <PrizeIcon completed={completed} />
-            <p className="name">{name}</p>
+            <PrizeIcon completed={!completed} />
+            <p className="name" style={!completed ? { textDecoration: "line-through" } : {}}>
+              {name}
+            </p>
             <p className="worth">{worth}</p>
           </>
         )}
       </DeletableList>
-      {isAdmin && (
         <div className="add-prize-overlay-wrapper" style={{ opacity: height / POPUP_HEIGHT, pointerEvents: height ? "auto" : "none" }}>
           <div style={{ height: window.innerHeight - height }} onClick={() => setHeight(0)}></div>
           <div className="add-prize-overlay" style={{ height }}>
@@ -168,13 +168,17 @@ interface PrizeIconProps {
 }
 
 function PrizeIcon({ completed }: PrizeIconProps) {
+  if (completed) {
+    return <img src={completedSvg} alt="completed" />;
+  }
+
   return (
     <svg viewBox="-5 -5 106 106">
       <path
         style={{
           stroke: "none",
           fillRule: "nonzero",
-          fill: completed ? "green" : "rgb(100%,100%,100%)",
+          fill: "rgb(100%,100%,100%)",
           fillOpacity: 1,
         }}
         d="M 36 8 C 29.421875 8 24 13.421875 24 20 C 24 21.40625 24.296875 22.742188 24.75 24 L 8 24 L 8 40 L 12 40 L 12 76 C 12 80.398438 15.601562 84 20 84 L 44 84 L 44 40 L 52 40 L 52 84 L 76 84 C 80.398438 84 84 80.398438 84 76 L 84 40 L 88 40 L 88 24 L 71.25 24 C 71.703125 22.742188 72 21.40625 72 20 C 72 13.421875 66.578125 8 60 8 C 56.925781 8 54.132812 9.214844 52 11.148438 L 52 11.0625 L 48 15.0625 L 44 11.0625 L 44 11.148438 C 41.867188 9.214844 39.074219 8 36 8 Z M 36 16 C 38.257812 16 40 17.742188 40 20 C 40 22.257812 38.257812 24 36 24 C 33.742188 24 32 22.257812 32 20 C 32 17.742188 33.742188 16 36 16 Z M 60 16 C 62.257812 16 64 17.742188 64 20 C 64 22.257812 62.257812 24 60 24 C 57.742188 24 56 22.257812 56 20 C 56 17.742188 57.742188 16 60 16 Z M 60 16 "

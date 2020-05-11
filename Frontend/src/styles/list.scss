@@ -62,7 +62,8 @@
     overflow: hidden;
     position: relative;
 
-    svg {
+    svg,
+    img {
       height: 1.75rem;
       flex: $svg-flex-size;
     }
@@ -101,12 +102,12 @@
   width: 100vw;
   z-index: 10000;
   background-color: #00000077;
-  transition: opacity 0.6s linear;
+  transition: opacity 0.3s linear;
 
   .add-prize-overlay {
     @include flex-box($justify: flex-start, $direction: column);
 
-    transition: 0.4s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    transition: 0.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
     padding-top: 0.6rem;
     background-color: $bg;
     position: absolute;
