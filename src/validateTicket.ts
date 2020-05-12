@@ -18,6 +18,7 @@ const validateTicket = (
   numbers: Set<number>,
   prize: PrizeTypes
 ): ValidationResponse => {
+  console.log(numbers);
   const ticket = process(_ticket, numbers);
   let message: string[] = [];
 
@@ -33,8 +34,8 @@ const validateTicket = (
       break;
     case PrizeTypes.Ladoo:
       return {
-        success: ticket[2][1].valid,
-        message: `${ticket[2][1].value} hasn't been ${ticket[2][1].reason}.`,
+        success: ticket[1][2].valid,
+        message: `${ticket[1][2].value} hasn't been ${ticket[1][2].reason}.`,
       };
     case PrizeTypes.Corner:
       for (const [i, j] of CORNERS) {
@@ -95,8 +96,9 @@ const process = (_ticket: Ticket, numbers: Set<number>) => {
     let row: Number[] = [];
     for (const num of _row) {
       if (num < 0) {
+        console.log(numbers, num, numbers.has(num));
         row.push({
-          valid: numbers.has(num),
+          valid: numbers.has(-num),
           value: -num,
           reason: "called out",
         });
@@ -110,6 +112,8 @@ const process = (_ticket: Ticket, numbers: Set<number>) => {
     }
     ticket.push(row);
   }
+
+  console.log(ticket, _ticket);
 
   return ticket;
 };
