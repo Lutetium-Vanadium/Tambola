@@ -38,3 +38,5 @@ enum PrizeTypes {
   BottomLine = "Bottom Line",
   EarlyFive = "Early Five",
 }
+
+type Ticket = number[][];

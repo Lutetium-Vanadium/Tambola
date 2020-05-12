@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from "react";
 
-import generateTicket from "#helpers/generateTicket";
-
-const ticket = generateTicket();
-
 const BOX_WIDTH = 0.11 * window.innerWidth;
 
-function Board() {
-  const [board, setBoard] = useState(ticket);
+interface BoardProps {
+  ticket: Ticket | null;
+  setTicket: React.Dispatch<React.SetStateAction<Ticket | null>>;
+}
+
+function Board({ ticket, setTicket }: BoardProps) {
+  const [board, setBoard] = useState(ticket ?? []);
 
   const toggleCancel = (x: number, y: number) => {
     const newBoard = deepCopy(board);
 
     newBoard[y][x] *= -1;
     setBoard(newBoard);
+    setTicket(newBoard);
   };
+
+  useEffect(() => {
+    setBoard(ticket ?? []);
+  }, [ticket]);
 
   return (
     <>

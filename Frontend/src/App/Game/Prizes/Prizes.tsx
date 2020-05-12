@@ -10,7 +10,7 @@ import completedSvg from "./completed.svg";
 
 interface PrizesProps {
   prizes: Prize[];
-  locked: boolean;
+  unlocked: boolean;
   roomId: string;
   addPrize: (prize: Prize, num: number) => void;
   claimPrize: (index: number) => void;
@@ -19,7 +19,7 @@ interface PrizesProps {
 const POPUP_HEIGHT = window.innerHeight / 2;
 const PRIZES = Object.values<string>(PrizeTypes);
 
-function Prizes({ prizes, locked, roomId, addPrize: _addPrize, claimPrize }: PrizesProps) {
+function Prizes({ prizes, unlocked, roomId, addPrize: _addPrize, claimPrize }: PrizesProps) {
   const [height, setHeight] = useState(0);
   const [type, setType] = useState<PrizeTypes | null>(null);
   const [worth, setWorth] = useState(50);
@@ -122,12 +122,12 @@ function Prizes({ prizes, locked, roomId, addPrize: _addPrize, claimPrize }: Pri
       </p>
       <DeletableList
         list={prizes}
-        enable={locked}
+        enable={unlocked}
         remove={remove}
         itemClassName="prizes"
         onClick={(_, index) => claimPrize(index)}
         End={
-          locked
+          unlocked
             ? () => (
                 <button className="add-prize" onClick={() => setHeight(POPUP_HEIGHT)}>
                   +
@@ -138,15 +138,15 @@ function Prizes({ prizes, locked, roomId, addPrize: _addPrize, claimPrize }: Pri
       >
         {({ name, completed, worth }) => (
           <>
-            <PrizeIcon completed={!completed} />
-            <p className="name" style={!completed ? { textDecoration: "line-through" } : {}}>
+            <PrizeIcon completed={completed} />
+            <p className="name" style={completed ? { textDecoration: "line-through" } : {}}>
               {name}
             </p>
             <p className="worth">{worth}</p>
           </>
         )}
       </DeletableList>
-      {locked && (
+      {unlocked && (
         <div className="add-prize-overlay-wrapper" style={{ opacity: height / POPUP_HEIGHT, pointerEvents: height ? "auto" : "none" }}>
           <div style={{ height: window.innerHeight - height }} onClick={() => setHeight(0)}></div>
           <div className="add-prize-overlay" style={{ height }}>

@@ -1,4 +1,4 @@
-import { PrizeTypes } from "#root/enums";
+import { PrizeTypes } from "./types";
 
 type Number = {
   value: number; // actual number
@@ -13,7 +13,11 @@ const CORNERS = [
   [2, 4],
 ];
 
-const validateTicket = (_ticket: number[][], numbers: Set<number>, prize: PrizeTypes): ValidationResponse => {
+const validateTicket = (
+  _ticket: Ticket,
+  numbers: Set<number>,
+  prize: PrizeTypes
+): ValidationResponse => {
   const ticket = process(_ticket, numbers);
   let message: string[] = [];
 
@@ -30,12 +34,14 @@ const validateTicket = (_ticket: number[][], numbers: Set<number>, prize: PrizeT
     case PrizeTypes.Ladoo:
       return {
         success: ticket[2][1].valid,
-        message: `${ticket[2][1]} hasn't been ${ticket[2][1].reason}.`,
+        message: `${ticket[2][1].value} hasn't been ${ticket[2][1].reason}.`,
       };
     case PrizeTypes.Corner:
       for (const [i, j] of CORNERS) {
         if (!ticket[i][j].valid) {
-          message.push(`${ticket[i][j].value} hasn't been ${ticket[i][j].reason}.`);
+          message.push(
+            `${ticket[i][j].value} hasn't been ${ticket[i][j].reason}.`
+          );
         }
       }
       break;
@@ -69,17 +75,20 @@ const validateTicket = (_ticket: number[][], numbers: Set<number>, prize: PrizeT
           }
         }
       }
-      return { success: count >= 5, message: `At least 5 numbers need to be properly crossed out.` };
+      return {
+        success: count >= 5,
+        message: `At least 5 numbers need to be properly crossed out.`,
+      };
     default:
       console.error("Unrecognized prize", prize);
       return { success: false, message: "Internal Error" };
   }
-  return { success: message.length > 0, message };
+  return { success: message.length === 0, message };
 };
 
 export default validateTicket;
 
-const process = (_ticket: number[][], numbers: Set<number>) => {
+const process = (_ticket: Ticket, numbers: Set<number>) => {
   let ticket: Number[][] = [];
 
   for (const _row of _ticket) {

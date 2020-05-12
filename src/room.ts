@@ -1,3 +1,5 @@
+import validateTicket from "./validateTicket";
+
 type PersonDetails = {
   admin: boolean;
   name: string;
@@ -63,6 +65,16 @@ class Room {
 
   updatePrize(prizes: Prize[]) {
     this.prizes = prizes;
+  }
+
+  validate(ticket: Ticket, index: number) {
+    const result = validateTicket(ticket, this.numbers, this.prizes[index].type);
+
+    if (result.success) {
+      this.prizes[index].completed = true;
+    }
+
+    return result;
   }
 }
 

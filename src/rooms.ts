@@ -33,7 +33,7 @@ class Rooms {
     const adminId = this._rooms[roomId]?.leave(id);
 
     if (this._rooms[roomId]?.length === 0) {
-      delete this._rooms[id];
+      delete this._rooms[roomId];
     }
     return adminId;
   }

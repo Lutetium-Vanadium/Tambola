@@ -29,18 +29,16 @@ io.on("connection", (sock) => {
     }
     sock.join(roomId);
 
-    // rooms.prt();
-    // console.log("\n");
+    const room = rooms.get(roomId);
 
     const details: RoomDetails = {
       isAdmin,
-      started: rooms.hasStarted(roomId),
-      connected: rooms.connected(roomId),
-      prizes: rooms.getPrizes(roomId),
+      started: room.started,
+      connected: room.connected,
+      prizes: room.prizes,
     };
 
     sock.emit("room-details", details);
-    console.log({ [sock.id]: sock.rooms });
   });
 
   sock.on("start-game", (roomId: string) => {
@@ -70,6 +68,18 @@ io.on("connection", (sock) => {
   sock.on("update-prize", (roomId: string, prizes: Prize[]) => {
     rooms.updatePrizes(roomId, prizes);
     io.to(roomId).emit("change-prizes", prizes);
+  });
+
+  sock.on("claim-prize", (ticket: Ticket, index: number, roomId: string) => {
+    const room = rooms.get(roomId);
+
+    const result = room.validate(ticket, index);
+
+    if (result.success) {
+      io.to(roomId).emit("change-prizes", room.prizes);
+    }
+
+    io.to(roomId).emit("claim-prize", sock.id, room.sockets.get(sock.id)?.name, room.prizes[index].name, result);
   });
 });
 

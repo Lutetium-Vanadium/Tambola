@@ -5,7 +5,7 @@ const showNumber = (num: number) => {
   ReactDOM.render(<ShowNumber num={num} />, document.getElementById("notification-root"));
 };
 
-const LEAVE_DELAY = 5000;
+const LEAVE_DELAY = 2500;
 const center: React.CSSProperties = {
   width: "100%",
   textAlign: "center",

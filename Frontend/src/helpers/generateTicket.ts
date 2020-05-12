@@ -92,14 +92,14 @@ const randint = (min: number, max: number) => Math.floor(Math.random() * (max - 
 
 const generateTicket = () => {
   const numbers = initializeNumbers();
-  let ticket = [
+  let ticket: Ticket = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
 
   for (let j = 1; j <= 15; j++) {
-    let randomNumber: number = 0;
+    let randomNumber = 0;
     if (j <= 9) {
       let min = 0,
         max = 10;

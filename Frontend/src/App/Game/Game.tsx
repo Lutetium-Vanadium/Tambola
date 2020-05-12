@@ -12,12 +12,15 @@ import Board from "./Board";
 import Nav from "./Nav";
 import People from "./People";
 import Prizes from "./Prizes";
+import generateTicket from "#helpers/generateTicket";
 
 interface GameProps extends RouteComponentProps<{ id: string }> {}
 
 const tempPeople = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi omnis fugiat atque eum, dignissimos facere cum? Facilis nesciunt magnam maiores!"
   .split(" ")
   .map((word) => ({ name: word, id: word }));
+
+let firstMount = true;
 
 function Game({
   match: {
@@ -30,7 +33,7 @@ function Game({
   const [prizes, setPrizes] = useState<Prize[]>([]);
   const [currentScreenIndex, setCurrentScreenIndex] = useState(0);
 
-  const [ticket, setTicket] = useState(null);
+  const [ticket, setTicket] = useState<Ticket | null>(null);
 
   const history = useHistory();
 
@@ -61,10 +64,18 @@ function Game({
   };
 
   const claimPrize = (index: number) => {
-    socket.emit("claim-prize", index, ticket);
+    console.log({ ticket, index, roomId });
+    if (ticket && started) {
+      socket.emit("claim-prize", ticket, index, roomId);
+    }
   };
 
   useEffect(() => {
+    if (firstMount) {
+      firstMount = false;
+      return;
+    }
+
     socket.emit("join-game", roomId, store.get("name"));
     const roomDetails = (details: RoomDetails) => {
       setIsAdmin(details.isAdmin);
@@ -91,9 +102,23 @@ function Game({
     const playerLeft = (playerId: string) => {
       setConnectedPeople((connectedPeople) => connectedPeople.filter((person) => person.id !== playerId));
     };
+    const claimPrize = (id: string, name: string, prizeName: string, result: ValidationResponse) => {
+      if (result.success) {
+        notification(`${id === socket.id ? "You have" : `${name} has`} claimed ${prizeName}!`);
+      } else if (id === socket.id) {
+        notification([
+          `You wrongly claimed ${prizeName}`,
+          "Reason: ",
+          ...(typeof result.message === "string" ? [result.message] : result.message),
+        ]);
+      } else {
+        notification(`${name} wrongly claimed ${prizeName}!`);
+      }
+    };
     const startGame = () => {
       setCurrentScreenIndex(1);
       setStarted(true);
+      setTicket(generateTicket());
     };
     const newNumber = (num: number) => {
       showNumber(num);
@@ -109,6 +134,7 @@ function Game({
       .on("change-prizes", changePrizes)
       .on("force-leave", forceLeave)
       .on("player-left", playerLeft)
+      .on("claim-prize", claimPrize)
       .on("start-game", startGame)
       .on("new-number", newNumber)
       .on("become-admin", becomeAdmin);
@@ -122,6 +148,7 @@ function Game({
         .off("change-prizes", changePrizes)
         .off("force-leave", forceLeave)
         .off("player-left", playerLeft)
+        .off("claim-prize", claimPrize)
         .off("start-game", startGame)
         .off("new-number", newNumber)
         .off("become-admin", becomeAdmin);
@@ -140,11 +167,11 @@ function Game({
       <div className="screen">
         {!started && <h2>Game will start soon</h2>}
         {screens[currentScreenIndex] === Screens.Board ? (
-          <Board />
+          <Board ticket={ticket} setTicket={setTicket} />
         ) : screens[currentScreenIndex] === Screens.People ? (
           <People people={connectedPeople} isAdmin={isAdmin} roomId={roomId} />
         ) : screens[currentScreenIndex] === Screens.Prizes ? (
-          <Prizes prizes={prizes} locked={isAdmin && !started} roomId={roomId} addPrize={addPrize} claimPrize={claimPrize} />
+          <Prizes prizes={prizes} unlocked={isAdmin && !started} roomId={roomId} addPrize={addPrize} claimPrize={claimPrize} />
         ) : (
           `ERROR, Unknown Screen: ${screens[currentScreenIndex]}`
         )}

@@ -22,6 +22,8 @@ declare global {
     success: boolean;
     message: string | string[];
   };
+
+  type Ticket = number[][];
 }
 
 enum PrizeTypes {
