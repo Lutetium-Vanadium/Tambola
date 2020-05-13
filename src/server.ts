@@ -79,7 +79,7 @@ io.on("connection", (sock) => {
       io.to(roomId).emit("change-prizes", room.prizes);
     }
 
-    io.to(roomId).emit("claim-prize", sock.id, room.sockets.get(sock.id)?.name, room.prizes[index].name, result);
+    io.to(roomId).emit("claim-prize", sock.id, room.sockets.get(sock.id)?.name, room.prizes[index], result);
   });
 });
 

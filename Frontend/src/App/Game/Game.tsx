@@ -3,7 +3,7 @@ import { RouteComponentProps, useHistory } from "react-router-dom";
 
 import socket from "#root/socketio";
 import { Screens } from "#root/enums";
-import { PLAYING_ROOM_SCREENS, WAITING_ROOM_SCREENS } from "#root/constants";
+import { PLAYING_ROOM_SCREENS, WAITING_ROOM_SCREENS, DEFAULT_PRIZES } from "#root/constants";
 import store from "#root/store";
 import notification from "#shared/notification";
 import showNumber from "#shared/showNumber";
@@ -27,13 +27,15 @@ function Game({
     params: { id: roomId },
   },
 }: GameProps) {
-  const [started, setStarted] = useState(false);
+  const [started, setStarted] = useState(true);
   const [isAdmin, setIsAdmin] = useState(true);
   const [connectedPeople, setConnectedPeople] = useState<Person[]>(tempPeople);
-  const [prizes, setPrizes] = useState<Prize[]>([]);
+  const [prizes, setPrizes] = useState<Prize[]>(DEFAULT_PRIZES);
   const [currentScreenIndex, setCurrentScreenIndex] = useState(0);
+  const [money, setMoney] = useState(0);
 
-  const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [ticket, setTicket] = useState<Ticket | null>(generateTicket());
+  const [toClaim, setToClaim] = useState(-1);
 
   const history = useHistory();
 
@@ -64,10 +66,9 @@ function Game({
   };
 
   const claimPrize = (index: number) => {
-    console.log({ ticket, index, roomId });
-    if (ticket && started) {
-      socket.emit("claim-prize", ticket, index, roomId);
-    }
+    if (prizes[index].completed) return;
+    console.log("CLAIM");
+    socket.emit("claim-prize", ticket, index, roomId);
   };
 
   useEffect(() => {
@@ -102,17 +103,18 @@ function Game({
     const playerLeft = (playerId: string) => {
       setConnectedPeople((connectedPeople) => connectedPeople.filter((person) => person.id !== playerId));
     };
-    const claimPrize = (id: string, name: string, prizeName: string, result: ValidationResponse) => {
+    const claimPrize = (id: string, name: string, prize: Prize, result: ValidationResponse) => {
       if (result.success) {
-        notification(`${id === socket.id ? "You have" : `${name} has`} claimed ${prizeName}!`);
+        notification(`${id === socket.id ? "You have" : `${name} has`} claimed ${prize.name}!`);
+        setMoney((money) => money + prize.worth);
       } else if (id === socket.id) {
         notification([
-          `You wrongly claimed ${prizeName}`,
+          `You wrongly claimed ${prize.name}`,
           "Reason: ",
           ...(typeof result.message === "string" ? [result.message] : result.message),
         ]);
       } else {
-        notification(`${name} wrongly claimed ${prizeName}!`);
+        notification(`${name} wrongly claimed ${prize.name}!`);
       }
     };
     const startGame = () => {
@@ -167,11 +169,25 @@ function Game({
       <div className="screen">
         {!started && <h2>Game will start soon</h2>}
         {screens[currentScreenIndex] === Screens.Board ? (
-          <Board ticket={ticket} setTicket={setTicket} />
+          <Board
+            ticket={ticket ?? []}
+            prizes={prizes}
+            setTicket={setTicket}
+            toClaim={toClaim}
+            setToClaim={setToClaim}
+            claimPrize={claimPrize}
+            money={money}
+          />
         ) : screens[currentScreenIndex] === Screens.People ? (
           <People people={connectedPeople} isAdmin={isAdmin} roomId={roomId} />
         ) : screens[currentScreenIndex] === Screens.Prizes ? (
-          <Prizes prizes={prizes} unlocked={isAdmin && !started} roomId={roomId} addPrize={addPrize} claimPrize={claimPrize} />
+          <Prizes
+            prizes={prizes}
+            unlocked={isAdmin && !started}
+            roomId={roomId}
+            addPrize={addPrize}
+            defaultPrizes={() => setPrizes(DEFAULT_PRIZES)}
+          />
         ) : (
           `ERROR, Unknown Screen: ${screens[currentScreenIndex]}`
         )}

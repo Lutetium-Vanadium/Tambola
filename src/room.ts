@@ -9,6 +9,7 @@ class Room {
   sockets = new Map<string, PersonDetails>();
   started = false;
   numbers = new Set<number>();
+  lastVal = -1;
   prizes: Prize[] = [];
 
   constructor(public id: string) {}
@@ -59,6 +60,7 @@ class Room {
     }
 
     this.numbers.add(num);
+    this.lastVal = num;
 
     return num;
   }
@@ -68,7 +70,7 @@ class Room {
   }
 
   validate(ticket: Ticket, index: number) {
-    const result = validateTicket(ticket, this.numbers, this.prizes[index].type);
+    const result = validateTicket(ticket, this.numbers, this.prizes[index].type, this.lastVal);
 
     if (result.success) {
       this.prizes[index].completed = true;

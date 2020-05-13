@@ -13,14 +13,13 @@ const CORNERS = [
   [2, 4],
 ];
 
-const validateTicket = (
-  _ticket: Ticket,
-  numbers: Set<number>,
-  prize: PrizeTypes
-): ValidationResponse => {
+const validateTicket = (_ticket: Ticket, numbers: Set<number>, prize: PrizeTypes, lastVal: number): ValidationResponse => {
   console.log(numbers);
   const ticket = process(_ticket, numbers);
   let message: string[] = [];
+
+  let bogey = true;
+  const bogeyMessage = `Bogey! ${lastVal} not included.`;
 
   switch (prize) {
     case PrizeTypes.FullHouse:
@@ -29,20 +28,33 @@ const validateTicket = (
           if (!num.valid) {
             message.push(`${num.value} hasn't been ${num.reason}.`);
           }
+          if (num.value === lastVal) {
+            bogey = false;
+          }
         }
       }
       break;
     case PrizeTypes.Ladoo:
+      const num = ticket[1][2];
+      if (num.value !== lastVal) {
+        return {
+          success: false,
+          message: bogeyMessage,
+        };
+      }
+
       return {
-        success: ticket[1][2].valid,
-        message: `${ticket[1][2].value} hasn't been ${ticket[1][2].reason}.`,
+        success: num.valid,
+        message: `${num.value} hasn't been ${num.reason}.`,
       };
     case PrizeTypes.Corner:
       for (const [i, j] of CORNERS) {
         if (!ticket[i][j].valid) {
-          message.push(
-            `${ticket[i][j].value} hasn't been ${ticket[i][j].reason}.`
-          );
+          message.push(`${ticket[i][j].value} hasn't been ${ticket[i][j].reason}.`);
+        }
+
+        if (ticket[i][j].value === lastVal) {
+          bogey = false;
         }
       }
       break;
@@ -51,6 +63,9 @@ const validateTicket = (
         if (!num.valid) {
           message.push(`${num.value} hasn't been ${num.reason}.`);
         }
+        if (num.value === lastVal) {
+          bogey = false;
+        }
       }
       break;
     case PrizeTypes.MiddleLine:
@@ -58,12 +73,18 @@ const validateTicket = (
         if (!num.valid) {
           message.push(`${num.value} hasn't been ${num.reason}.`);
         }
+        if (num.value === lastVal) {
+          bogey = false;
+        }
       }
       break;
     case PrizeTypes.BottomLine:
       for (const num of ticket[2]) {
         if (!num.valid) {
           message.push(`${num.value} hasn't been ${num.reason}.`);
+        }
+        if (num.value === lastVal) {
+          bogey = false;
         }
       }
       break;
@@ -73,17 +94,33 @@ const validateTicket = (
         for (const num of row) {
           if (num.valid) {
             count++;
+            if (num.value === lastVal) {
+              bogey = false;
+            }
+          } else if (num.reason === "called out") {
+            message.push(`${num.value} hasn't been ${num.reason}.`);
           }
         }
       }
+      if (bogey) {
+        return {
+          success: false,
+          message: bogeyMessage,
+        };
+      }
+
       return {
         success: count >= 5,
-        message: `At least 5 numbers need to be properly crossed out.`,
+        message: [`At least 5 numbers need to be properly crossed out.`, ...message],
       };
     default:
       console.error("Unrecognized prize", prize);
       return { success: false, message: "Internal Error" };
   }
+  if (bogey) {
+    message.unshift(bogeyMessage);
+  }
+
   return { success: message.length === 0, message };
 };
 
@@ -96,7 +133,6 @@ const process = (_ticket: Ticket, numbers: Set<number>) => {
     let row: Number[] = [];
     for (const num of _row) {
       if (num < 0) {
-        console.log(numbers, num, numbers.has(num));
         row.push({
           valid: numbers.has(-num),
           value: -num,
@@ -112,8 +148,6 @@ const process = (_ticket: Ticket, numbers: Set<number>) => {
     }
     ticket.push(row);
   }
-
-  console.log(ticket, _ticket);
 
   return ticket;
 };

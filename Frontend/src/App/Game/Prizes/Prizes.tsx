@@ -13,13 +13,13 @@ interface PrizesProps {
   unlocked: boolean;
   roomId: string;
   addPrize: (prize: Prize, num: number) => void;
-  claimPrize: (index: number) => void;
+  defaultPrizes: () => void;
 }
 
 const POPUP_HEIGHT = window.innerHeight / 2;
 const PRIZES = Object.values<string>(PrizeTypes);
 
-function Prizes({ prizes, unlocked, roomId, addPrize: _addPrize, claimPrize }: PrizesProps) {
+function Prizes({ prizes, unlocked, roomId, addPrize: _addPrize, defaultPrizes }: PrizesProps) {
   const [height, setHeight] = useState(0);
   const [type, setType] = useState<PrizeTypes | null>(null);
   const [worth, setWorth] = useState(50);
@@ -118,6 +118,15 @@ function Prizes({ prizes, unlocked, roomId, addPrize: _addPrize, claimPrize }: P
               <br key="br1" />,
               <br key="br2" />,
               "If you are the creator, click the button below to add prizes, otherwise ask the creator to add prizes",
+              ...(unlocked
+                ? [
+                    <br key="br3" />,
+                    <br key="br4" />,
+                    <button onClick={defaultPrizes} className="btn">
+                      Default
+                    </button>,
+                  ]
+                : []),
             ]}
       </p>
       <DeletableList
@@ -125,7 +134,6 @@ function Prizes({ prizes, unlocked, roomId, addPrize: _addPrize, claimPrize }: P
         enable={unlocked}
         remove={remove}
         itemClassName="prizes"
-        onClick={(_, index) => claimPrize(index)}
         End={
           unlocked
             ? () => (

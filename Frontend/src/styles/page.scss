@@ -15,6 +15,18 @@
     text-align: center;
   }
 
+  .btn {
+    padding: 0.5rem 1rem;
+    background-color: $highlightd;
+    border-radius: 0.4rem;
+    text-align: center;
+    cursor: pointer;
+
+    &:disabled {
+      background-color: #292929;
+    }
+  }
+
   .sub-heading {
     width: 100%;
     padding: 0 2rem;
@@ -128,6 +140,33 @@
     }
   }
 
+  .claim-prizes {
+    @include flex-box($direction: column);
+    width: 100%;
+  }
+
+  .money-wrapper {
+    @include flex-box;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0 0.8rem;
+
+    img {
+      height: 1.4rem;
+      margin-right: 0.7rem;
+    }
+
+    .money {
+      margin-right: 1.5rem;
+    }
+
+    span::before {
+      content: "₹";
+    }
+  }
+
   $box-width: 11vw;
   .tickets {
     @include flex-box($direction: column);
@@ -141,6 +180,7 @@
     position: relative;
     height: $box-width * 3;
     width: $box-width * 9;
+    margin-bottom: 1rem;
   }
 
   .ticket-row {
