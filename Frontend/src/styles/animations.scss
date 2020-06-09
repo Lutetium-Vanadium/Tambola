@@ -172,3 +172,25 @@ $curve: cubic-bezier(0.215, 0.61, 0.355, 1);
     transform: scale(1.1);
   }
 }
+
+@keyframes grow-in {
+  from {
+    width: 0;
+    height: 0;
+  }
+
+  to {
+    width: calc(7vw * 10 + 2rem);
+    height: calc(7vw * 9 + 2rem);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

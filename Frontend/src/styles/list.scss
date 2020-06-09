@@ -11,7 +11,7 @@
     width: 100%;
     background-color: $bg;
     transition: 0.3s;
-    z-index: 5;
+    z-index: 2;
     position: relative;
   }
   .left,
@@ -55,7 +55,7 @@
 
     background-color: #b41e1e;
     transition: 0.3s;
-    z-index: 5;
+    z-index: 2;
     height: 3.4rem;
     width: 100%;
     padding: 0;
@@ -100,7 +100,7 @@
   top: 0;
   height: calc(100 * var(--vh));
   width: 100vw;
-  z-index: 10000;
+  z-index: 10;
   background-color: #00000077;
   transition: opacity 0.3s linear;
 

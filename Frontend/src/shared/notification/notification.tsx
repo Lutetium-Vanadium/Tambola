@@ -1,14 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 
-export default function notification(content: string | string[], important = false) {
+export default function notification(
+  content: string | string[],
+  important = false
+) {
   if (typeof content === "string") {
     content = [content];
   }
-  ReactDOM.render(<Notify content={content} important={important} />, document.getElementById("notification-root"));
+  ReactDOM.render(
+    <Notify content={content} important={important} />,
+    document.getElementById("notification-root")
+  );
 }
 
-const LEAVE_DELAY = 5000;
+const LEAVE_DELAY = 10000;
 
 interface NotifyProps {
   content: string[];
@@ -17,7 +23,9 @@ interface NotifyProps {
 
 function Notify({ content, important }: NotifyProps) {
   const [height, setHeight] = useState(0);
-  const [wrapperStyle, setWrapperStyle] = useState({ transform: "translateY(-200px)" });
+  const [wrapperStyle, setWrapperStyle] = useState({
+    transform: "translateY(-200px)",
+  });
 
   const notify = useRef<HTMLDivElement>(null);
   const notificationClose = useRef<HTMLDivElement>(null);
@@ -52,7 +60,11 @@ function Notify({ content, important }: NotifyProps) {
           <p key={`notification-p-${i}`}>{text}</p>
         ))}
       </div>
-      <div className="close-x" onClick={closeNotification} ref={notificationClose}>
+      <div
+        className="close-x"
+        onClick={closeNotification}
+        ref={notificationClose}
+      >
         <button>&#215;</button>
       </div>
     </div>

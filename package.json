@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "watch": "nodemon --config \"./utils/nodemon.json\"/",
+    "start": "node ./build/server.js",
     "run:frontend": "cd Frontend && yarn watch",
     "build:frontend": "cd Frontend && yarn build",
     "build:backend": "tsc",

@@ -42,6 +42,8 @@ io.on("connection", (sock) => {
   });
 
   sock.on("start-game", (roomId: string) => {
+    rooms.start(roomId);
+    console.log("Starting", roomId);
     io.to(roomId).emit("start-game");
   });
 
@@ -62,6 +64,7 @@ io.on("connection", (sock) => {
 
   sock.on("generate-number", (roomId: string) => {
     const num = rooms.randomNum(roomId);
+    console.log("Calling number", num);
     io.to(roomId).emit("new-number", num);
   });
 
@@ -76,7 +79,7 @@ io.on("connection", (sock) => {
     const result = room.validate(ticket, index);
 
     if (result.success) {
-      io.to(roomId).emit("change-prizes", room.prizes);
+      io.to(roomId).emit("buffer-prizes", room.prizes);
     }
 
     io.to(roomId).emit("claim-prize", sock.id, room.sockets.get(sock.id)?.name, room.prizes[index], result);

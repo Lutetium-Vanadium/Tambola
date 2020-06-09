@@ -2,10 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 const showNumber = (num: number) => {
-  ReactDOM.render(<ShowNumber num={num} />, document.getElementById("notification-root"));
+  ReactDOM.render(
+    <ShowNumber num={num} />,
+    document.getElementById("notification-root")
+  );
 };
 
-const LEAVE_DELAY = 2500;
+const LEAVE_DELAY = 10000;
 const center: React.CSSProperties = {
   width: "100%",
   textAlign: "center",
@@ -17,7 +20,9 @@ interface ShowNumberProps {
 
 function ShowNumber({ num }: ShowNumberProps) {
   const [height, setHeight] = useState(0);
-  const [wrapperStyle, setWrapperStyle] = useState({ transform: "translateY(-200px)" });
+  const [wrapperStyle, setWrapperStyle] = useState({
+    transform: "translateY(-200px)",
+  });
 
   const notify = useRef<HTMLDivElement>(null);
   const notificationClose = useRef<HTMLDivElement>(null);
@@ -47,9 +52,21 @@ function ShowNumber({ num }: ShowNumberProps) {
     <div className="notification" style={wrapperStyle} ref={notify}>
       <div style={{ width: (8 * window.innerWidth) / 10 }}>
         <p style={center}>New Number</p>
-        <p style={{ ...center, fontSize: window.innerHeight / 10, fontWeight: "bold" }}>{num}</p>
+        <p
+          style={{
+            ...center,
+            fontSize: window.innerHeight / 10,
+            fontWeight: "bold",
+          }}
+        >
+          {num}
+        </p>
       </div>
-      <div className="close-x" onClick={closeNotification} ref={notificationClose}>
+      <div
+        className="close-x"
+        onClick={closeNotification}
+        ref={notificationClose}
+      >
         <button>&#215;</button>
       </div>
     </div>

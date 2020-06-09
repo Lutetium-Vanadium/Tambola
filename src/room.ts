@@ -55,6 +55,9 @@ class Room {
 
   randomNum() {
     let num = Math.ceil(Math.random() * 90);
+    if (this.numbers.size >= 90) {
+      return -1;
+    }
     while (this.numbers.has(num)) {
       num = Math.ceil(Math.random() * 90);
     }

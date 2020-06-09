@@ -9,17 +9,20 @@ interface BoardProps {
   ticket: Ticket;
   money: number;
   prizes: Prize[];
-  toClaim: number;
-  setToClaim: React.Dispatch<React.SetStateAction<number>>;
+  lastNum: number | null;
+  numbers: Set<number>;
+  isAdmin: boolean;
   setTicket: React.Dispatch<React.SetStateAction<Ticket | null>>;
   claimPrize: (index: number) => void;
 }
+const iterator90 = new Array(90).fill(0);
 
-function Board({ ticket, money, prizes: _prizes, setTicket, toClaim, setToClaim, claimPrize: _claimPrize }: BoardProps) {
+function Board({ ticket, money, prizes: _prizes, lastNum, numbers, isAdmin, setTicket, claimPrize: _claimPrize }: BoardProps) {
   const [prizes, setPrizes] = useState<string[]>(_prizes.filter((prize) => !prize.completed).map((prize) => prize.name));
+  const [showNumbers, setShowNumbers] = useState(false);
 
   const claimPrize = (str: string) => {
-    _claimPrize(prizes.indexOf(str));
+    _claimPrize(_prizes.findIndex((value) => value.name === str));
   };
 
   const toggleCancel = (x: number, y: number) => {
@@ -40,6 +43,24 @@ function Board({ ticket, money, prizes: _prizes, setTicket, toClaim, setToClaim,
         <p className="money">Amount Won:</p>
         <span>{money}</span>
       </div>
+      {isAdmin &&
+        (showNumbers ? (
+          <>
+            <div className="full-screen" onClick={() => setShowNumbers(false)}></div>
+            <div className="all-numbers-grid">
+              {iterator90.map((_, i) => {
+                const num = i + 1;
+                const baseClass = `box-${Math.floor(i / 10)}-${i % 10}`;
+                return <div className={`${baseClass}${numbers.has(num) ? " cancelled" : ""}`}>{num}</div>;
+              })}
+            </div>
+          </>
+        ) : (
+          <button onClick={() => setShowNumbers(true)} className="show-numbers">
+            Numbers
+          </button>
+        ))}
+      {lastNum && <h3>Last Number: {lastNum}</h3>}
       <div className="ticket">
         {ticket.map((arr, y) => (
           <span key={y} style={{ top: BOX_WIDTH * y }} className="ticket-row">
@@ -62,14 +83,6 @@ function Board({ ticket, money, prizes: _prizes, setTicket, toClaim, setToClaim,
       </div>
       <div className="claim-prizes">
         <Dropdown placeholder="Prize to Claim" value="Claim Prize" options={prizes} changeValue={claimPrize} isButton />
-        {/* <button
-          className="btn"
-          disabled={toClaim < 0}
-          onClick={claimPrize}
-          // style={toClaim < 0 ? { backgroundColor: "#292929", cursor: "auto" } : {}}
-        >
-          Claim Prize
-        </button> */}
       </div>
     </div>
   );
