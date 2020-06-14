@@ -2,13 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 const showNumber = (num: number) => {
-  ReactDOM.render(
-    <ShowNumber num={num} />,
-    document.getElementById("notification-root")
-  );
+  ReactDOM.render(<ShowNumber num={num} />, document.getElementById("notification-root"));
 };
 
-const LEAVE_DELAY = 10000;
+const LEAVE_DELAY = 6900;
 const center: React.CSSProperties = {
   width: "100%",
   textAlign: "center",
@@ -43,10 +40,14 @@ function ShowNumber({ num }: ShowNumberProps) {
     let notifyRect = notify.current?.getBoundingClientRect();
     setHeight(notifyRect?.height ?? 0);
     setWrapperStyle({ transform: "translateY(0)" });
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       notificationClose.current?.click();
     }, LEAVE_DELAY);
-  }, []);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [num]);
 
   return (
     <div className="notification" style={wrapperStyle} ref={notify}>
@@ -62,11 +63,7 @@ function ShowNumber({ num }: ShowNumberProps) {
           {num}
         </p>
       </div>
-      <div
-        className="close-x"
-        onClick={closeNotification}
-        ref={notificationClose}
-      >
+      <div className="close-x" onClick={closeNotification} ref={notificationClose}>
         <button>&#215;</button>
       </div>
     </div>

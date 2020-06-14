@@ -3,7 +3,11 @@ import { RouteComponentProps, useHistory } from "react-router-dom";
 
 import socket from "#root/socketio";
 import { Screens } from "#root/enums";
-import { PLAYING_ROOM_SCREENS, WAITING_ROOM_SCREENS, DEFAULT_PRIZES } from "#root/constants";
+import {
+  PLAYING_ROOM_SCREENS,
+  WAITING_ROOM_SCREENS,
+  DEFAULT_PRIZES,
+} from "#root/constants";
 import store from "#root/store";
 import notification from "#shared/notification";
 import showNumber from "#shared/showNumber";
@@ -109,17 +113,32 @@ function Game({
     };
     const forceLeave = (playerId: string) => {
       if (playerId === socket.id) {
-        socket.emit("leave-game", roomId);
+        socket.emit("leave-game", roomId, true);
         notification("You were kicked out of the room by the owner");
         history.push("/");
+      } else {
+        setConnectedPeople((connectedPeople) =>
+          connectedPeople.filter((person) => person.id !== playerId)
+        );
       }
     };
     const playerLeft = (playerId: string) => {
-      setConnectedPeople((connectedPeople) => connectedPeople.filter((person) => person.id !== playerId));
+      setConnectedPeople((connectedPeople) =>
+        connectedPeople.filter((person) => person.id !== playerId)
+      );
     };
-    const claimPrize = (id: string, name: string, prize: Prize, result: ValidationResponse) => {
+    const claimPrize = (
+      id: string,
+      name: string,
+      prize: Prize,
+      result: ValidationResponse
+    ) => {
       if (result.success) {
-        notification(`${id === socket.id ? "You have" : `${name} has`} claimed ${prize.name}! 🥳`);
+        notification(
+          `${id === socket.id ? "You have" : `${name} has`} claimed ${
+            prize.name
+          }! 🥳`
+        );
         if (id === socket.id) {
           setMoney((money) => money + prize.worth);
         }
@@ -128,7 +147,9 @@ function Game({
           [
             `You wrongly claimed ${prize.name}. ❌`,
             "Reason: ",
-            ...(typeof result.message === "string" ? [result.message] : result.message),
+            ...(typeof result.message === "string"
+              ? [result.message]
+              : result.message),
           ],
           true
         );
@@ -174,7 +195,7 @@ function Game({
       .on("new-number", newNumber)
       .on("become-admin", becomeAdmin);
 
-    return () => {
+    const leave = () => {
       console.log("UNMOUNTING GAME: LEAVING", roomId);
       socket.emit("leave-game", roomId);
       socket
@@ -189,7 +210,11 @@ function Game({
         .off("new-number", newNumber)
         .off("become-admin", becomeAdmin);
     };
-  }, [roomId]);
+
+    window.addEventListener("beforeunload", leave);
+
+    return leave;
+  }, [roomId, socket.id]);
 
   const shareText = `Join my game of Tambola by clicking on the link below!%0a%0a ${encodeURIComponent(
     `${window.location.origin}?id=${roomId}`
@@ -199,7 +224,11 @@ function Game({
 
   return (
     <div className="page">
-      <Nav screens={screens} current={currentScreenIndex} goto={setCurrentScreenIndex} />
+      <Nav
+        screens={screens}
+        current={currentScreenIndex}
+        goto={setCurrentScreenIndex}
+      />
       <div className="screen">
         {!started && <h2>Game will start soon</h2>}
         {screens[currentScreenIndex] === Screens.Board ? (
@@ -216,13 +245,23 @@ function Game({
         ) : screens[currentScreenIndex] === Screens.People ? (
           <People people={connectedPeople} isAdmin={isAdmin} roomId={roomId} />
         ) : screens[currentScreenIndex] === Screens.Prizes ? (
-          <Prizes prizes={prizes} unlocked={isAdmin && !started} roomId={roomId} addPrize={addPrize} defaultPrizes={defaultPrizes} />
+          <Prizes
+            prizes={prizes}
+            unlocked={isAdmin && !started}
+            roomId={roomId}
+            addPrize={addPrize}
+            defaultPrizes={defaultPrizes}
+          />
         ) : (
           `ERROR, Unknown Screen: ${screens[currentScreenIndex]}`
         )}
       </div>
       <div className="btns">
-        <a href={`whatsapp://send?text=${shareText}`} data-action="share/whatsapp/share" className="share">
+        <a
+          href={`whatsapp://send?text=${shareText}`}
+          data-action="share/whatsapp/share"
+          className="share"
+        >
           Share
         </a>
         {isAdmin &&

@@ -47,14 +47,16 @@ io.on("connection", (sock) => {
     io.to(roomId).emit("start-game");
   });
 
-  sock.on("leave-game", (roomId: string) => {
+  sock.on("leave-game", (roomId: string, forced = false) => {
     console.log(sock.id, "LEAVES", roomId);
     sock.leave(roomId);
     const adminId = rooms.leave(roomId, sock.id);
     if (adminId) {
       io.to(adminId).emit("become-admin");
     }
-    io.to(roomId).emit("player-left", sock.id);
+    if (!forced) {
+      io.to(roomId).emit("player-left", sock.id);
+    }
   });
 
   sock.on("remove-player", (roomId: string, playerId: string) => {
@@ -82,10 +84,18 @@ io.on("connection", (sock) => {
       io.to(roomId).emit("buffer-prizes", room.prizes);
     }
 
-    io.to(roomId).emit("claim-prize", sock.id, room.sockets.get(sock.id)?.name, room.prizes[index], result);
+    io.to(roomId).emit(
+      "claim-prize",
+      sock.id,
+      room.sockets.get(sock.id)?.name,
+      room.prizes[index],
+      result
+    );
   });
 });
 
-app.get(["/", "/:id/"], (req, res) => res.sendFile("index.html", { root: staticFolder }));
+app.get(["/", "/:id/"], (req, res) =>
+  res.sendFile("index.html", { root: staticFolder })
+);
 
 server.listen(PORT, () => console.info(`Listening on port ${PORT}`));
