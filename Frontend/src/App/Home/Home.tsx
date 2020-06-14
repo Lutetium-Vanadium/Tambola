@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import store from "#root/store";
 import useQuery from "#helpers/useQuery";
 
-import { v4 as uuid } from "uuid";
+import { nanoid } from "nanoid";
 
 function Home() {
   const params = useQuery();
@@ -35,7 +35,7 @@ function Home() {
   };
 
   const createGame = () => {
-    const id = uuid();
+    const id = nanoid(7);
 
     history.push(id.split("-").join(""));
   };

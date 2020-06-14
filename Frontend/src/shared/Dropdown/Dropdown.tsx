@@ -20,7 +20,10 @@ function Dropdown({ placeholder, options, changeValue: _changeValue, value, isBu
   };
 
   return (
-    <div className={`dropdown${showOptions ? " -focus" : ""}${isButton ? " btn" : ""}`} onClick={() => setShowOptions(!showOptions)}>
+    <div
+      className={`dropdown${showOptions ? " -focus" : ""}${isButton ? " btn" : ""}${options.length ? "" : " -disabled"}`}
+      onClick={() => setShowOptions(!showOptions)}
+    >
       <p className={`title${title === placeholder ? " -placeholder" : ""}`}>{title}</p>
       <ul className="options" style={{ height: showOptions ? `${options.length * 2}rem` : 0 }}>
         {options.map((option, index) => (

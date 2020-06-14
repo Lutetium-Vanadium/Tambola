@@ -5,7 +5,7 @@ import socketio from "socket.io";
 import Rooms from "./rooms";
 import "./types";
 
-const PORT = 3000;
+const PORT = 5000;
 
 const app = express();
 const staticFolder = path.resolve("static");
