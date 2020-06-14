@@ -92,6 +92,14 @@ function Game({
       return;
     }
 
+    const moneyStr = localStorage.getItem(roomId);
+    if (moneyStr !== null) {
+      const money = parseInt(moneyStr);
+      if (money !== NaN) {
+        setMoney(money);
+      }
+    }
+
     socket.emit("join-game", roomId, store.get("name"));
     const roomDetails = (details: RoomDetails) => {
       setIsAdmin(details.isAdmin);
@@ -140,7 +148,11 @@ function Game({
           }! 🥳`
         );
         if (id === socket.id) {
-          setMoney((money) => money + prize.worth);
+          setMoney((money) => {
+            money += prize.worth;
+            localStorage.setItem(roomId, money.toString());
+            return money;
+          });
         }
       } else if (id === socket.id) {
         notification(
